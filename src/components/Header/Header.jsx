@@ -6,10 +6,11 @@ import { IoCloseCircle } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
 import Cart from "../Cart/Cart";
 import { useAppContext } from "../../utils/context";
+import Search from "./Search/Search";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { openCart, setOpenCart } = useAppContext();
+  const { openCart, setOpenCart, serchOpen, setSerchOpen } = useAppContext();
 
   const handleClose = () => {
     setOpen(false);
@@ -37,7 +38,9 @@ const Header = () => {
         {/* Mobile Menu (Visible on small screens) */}
         <div
           className={`fixed top-0 left-0 w-full h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-4 duration-500 ease-out ${
-            open ? "translate-y-0 opacity-100 z-50" : "translate-y-full opacity-0"
+            open
+              ? "translate-y-0 opacity-100 z-50"
+              : "translate-y-full opacity-0"
           } md:hidden`}
           style={{
             transition: "transform 0.5s ease-out, opacity 0.5s ease-out",
@@ -64,12 +67,25 @@ const Header = () => {
 
         {/* Right */}
         <div className="flex gap-4 items-center">
-          <IoSearchOutline
-            className="w-6 h-6 cursor-pointer"
-            aria-label="Search"
-          />
+          <div className="relative">
+            <IoSearchOutline
+              className={`w-6 h-6 cursor-pointer transition-transform duration-300 ${
+                serchOpen ? "rotate-45" : ""
+              }`}
+              onClick={() => setSerchOpen(!serchOpen)}
+            />
+            <div
+              className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ${
+                serchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+            
+                {serchOpen && <Search />}
+            </div>
+          </div>
+
           <CiHeart className="w-6 h-6 cursor-pointer" aria-label="Favorites" />
-          
+
           <div className="relative">
             <MdOutlineShoppingBag
               className="w-6 h-6 cursor-pointer"
