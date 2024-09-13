@@ -3,7 +3,7 @@ import AllProducts from "../../AllProducts/AllProducts";
 const RelatedProducts = () => {
   return (
     <div>
-      <AllProducts handleText="Related Prodcuts" />
+      <AllProducts handleText=" Prodcuts" />
     </div>
   );
 };

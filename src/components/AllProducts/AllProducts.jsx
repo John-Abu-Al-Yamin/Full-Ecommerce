@@ -6,17 +6,18 @@ import Product from "./Product/Product";
 
 const AllProducts = ({ handleText, innerPage }) => {
   const { productsLoading, productsError, productsData } = useAppContext();
-  
+
   if (productsLoading) {
-    return <div>
-      <Loader/>
-    </div>;
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
-  
+
   if (productsError) {
     return <div>Error loading products!</div>;
   }
-console.log(productsData)
 
   return (
     <div>
@@ -28,8 +29,7 @@ console.log(productsData)
       )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-6">
-      <Product productsData={productsData} />
-
+        <Product productsData={productsData} />
       </div>
     </div>
   );

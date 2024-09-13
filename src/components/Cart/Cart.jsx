@@ -1,55 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { useAppContext } from "../../utils/context";
-import productimg from "../../assets/products/earbuds-prod-1.webp";
 import { IoBagHandleSharp, IoCloseSharp } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
 
-export default function Cart() {
-  const [cart, setCart] = useState([
-    // Example cart items
-    // {
-    //   id: 1,
-    //   name: "Cozy Blanket",
-    //   price: 29.99,
-    //   quantity: 1,
-    //   image: productimg,
-    // },
-    // {
-    //   id: 2,
-    //   name: "Autumn Mug",
-    //   price: 12.99,
-    //   quantity: 2,
-    //   image: productimg,
-    // },
-    // {
-    //   id: 3,
-    //   name: "Fall Fragrance Candle",
-    //   price: 16.99,
-    //   quantity: 1,
-    //   image: productimg,
-    // },
-  ]);
-  const { openCart, setOpenCart } = useAppContext();
+const Cart = () => {
+  const { cartItems, openCart, setOpenCart, handleRemoveFromCart } =
+    useAppContext();
+  const [cart, setCart] = useState(cartItems);
 
-  const handleIncrement = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+  useEffect(() => {
+    setCart(cartItems);
+  }, [cartItems]);
+
+  // Calculate cart total
+  const total = cart.reduce(
+    (sum, item) => sum + item.attributes.price * item.quantity,
+    0
+  );
+
+  // Function to update quantity
+  const handleQuantityChange = (item, action) => {
+    const updatedCart = cart.map((cartItem) => {
+      if (cartItem.id === item.id) {
+        return {
+          ...cartItem,
+          quantity:
+            action === "increase"
+              ? cartItem.quantity + 1
+              : Math.max(cartItem.quantity - 1, 1),
+        };
+      }
+      return cartItem;
+    });
+    setCart(updatedCart);
   };
-
-  const handleDecrement = (id) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
-          : item
-      )
-    );
-  };
-
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
     <>
@@ -70,11 +55,9 @@ export default function Cart() {
 
         {/* Empty cart notification */}
         {cart.length === 0 && (
-          
-          <div className="fixed inset-0 flex items-center justify-center ">
-            <div className=" px-4 py-2 rounded-full flex flex-col  items-center  gap-2">
-              <IoBagHandleSharp size={100} className="w-28 " />
-
+          <div className="fixed inset-0 flex items-center justify-center">
+            <div className="px-4 py-2 rounded-full flex flex-col items-center gap-2">
+              <IoBagHandleSharp size={100} className="w-28" />
               <span className="text-lg font-semibold">No Cart</span>
             </div>
           </div>
@@ -89,33 +72,32 @@ export default function Cart() {
                 className="grid grid-cols-[80px_1fr_auto] items-center gap-2 bg-gray-50 p-2 rounded-lg shadow-sm"
               >
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={
+                    process.env.REACT_APP_DEV_URL +
+                    item?.attributes?.img?.data?.[0]?.attributes?.url
+                  }
+                  alt={item?.attributes?.title || "Product image"}
                   className="w-16 h-16 object-cover rounded-lg"
                 />
+
                 <div className="grid gap-1">
-                  <h3 className="text-lg font-medium text-gray-700">
-                    {item.name}
+                  <h3 className="text-sm font-medium text-gray-700">
+                    {item.attributes.title}
                   </h3>
-                  <p className="text-gray-500">${item.price.toFixed(2)}</p>
+                  <p className="text-gray-500">${item?.attributes?.price}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold">
+                       quantity : {item?.quantity || 1}
+                    </span>
+                  </div>
                 </div>
+
                 <div className="flex items-center gap-2">
                   <button
-                    className="bg-gray-100 p-1 rounded hover:bg-gray-200 transition-colors"
-                    aria-label="Decrease quantity"
-                    onClick={() => handleDecrement(item.id)}
+                    className="text-gray-500 hover:text-gray-600"
+                    onClick={() => handleRemoveFromCart(item)}
                   >
-                    <FaMinus className="text-gray-800 w-3 h-3" />
-                  </button>
-                  <span className="text-lg font-medium text-gray-700">
-                    {item.quantity}
-                  </span>
-                  <button
-                    className="bg-gray-100 p-1 rounded hover:bg-gray-200 transition-colors"
-                    aria-label="Increase quantity"
-                    onClick={() => handleIncrement(item.id)}
-                  >
-                    <FaPlus className="text-gray-800 w-3 h-3" />
+                    <MdDelete size={22} className="text-red-700" />
                   </button>
                 </div>
               </li>
@@ -127,9 +109,7 @@ export default function Cart() {
         <div className="border-t pt-4">
           <div className="flex items-center justify-between mb-4">
             <p className="text-lg font-medium text-gray-700">Total:</p>
-            <p className="text-2xl font-bold text-gray-800">
-              ${total.toFixed(2)}
-            </p>
+            <p className="text-gray-500">${total.toFixed(2)}</p>
           </div>
           <button className="bg-black text-white py-2 px-10 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors">
             Checkout
@@ -138,4 +118,6 @@ export default function Cart() {
       </div>
     </>
   );
-}
+};
+
+export default Cart;

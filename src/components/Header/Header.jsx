@@ -7,10 +7,11 @@ import { FiMenu } from "react-icons/fi";
 import Cart from "../Cart/Cart";
 import { useAppContext } from "../../utils/context";
 import Search from "./Search/Search";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { openCart, setOpenCart, serchOpen, setSerchOpen } = useAppContext();
+  const { openCart, setOpenCart, serchOpen, setSerchOpen,cartItems } = useAppContext();
 
   const handleClose = () => {
     setOpen(false);
@@ -30,7 +31,7 @@ const Header = () => {
 
         {/* Left (Desktop) */}
         <ul className="hidden md:flex gap-4 items-center font-medium text-xs uppercase cursor-pointer">
-          <li>Home</li>
+          <Link to="/">Home</Link>
           <li>About</li>
           <li>Categories</li>
         </ul>
@@ -54,7 +55,9 @@ const Header = () => {
             <IoCloseCircle />
           </button>
           <ul className="flex flex-col gap-4 font-medium text-xs uppercase cursor-pointer">
-            <li>Home</li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
             <li>About</li>
             <li>Categories</li>
           </ul>
@@ -62,7 +65,7 @@ const Header = () => {
 
         {/* Center */}
         <div className="text-base md:text-xl md:font-bold cursor-pointer">
-          Ecommerce.
+          <Link to="/">Ecommerce...</Link>
         </div>
 
         {/* Right */}
@@ -79,8 +82,7 @@ const Header = () => {
                 serchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-            
-                {serchOpen && <Search />}
+              {serchOpen && <Search />}
             </div>
           </div>
 
@@ -93,7 +95,7 @@ const Header = () => {
               onClick={() => setOpenCart(!openCart)}
             />
             <p className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex justify-center items-center">
-              0
+              {cartItems.length}
             </p>
             <div
               className={`fixed top-0 right-0 w-[85%] md:w-[50%] lg:w-[30%] h-full bg-white text-gray-900 shadow-lg p-6 transform transition-transform duration-700 ease-out ${
