@@ -11,7 +11,14 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const { openCart, setOpenCart, serchOpen, setSerchOpen,cartItems } = useAppContext();
+  const {
+    openCart,
+    setOpenCart,
+    serchOpen,
+    setSerchOpen,
+    cartItems,
+    wishList,
+  } = useAppContext();
 
   const handleClose = () => {
     setOpen(false);
@@ -32,8 +39,9 @@ const Header = () => {
         {/* Left (Desktop) */}
         <ul className="hidden md:flex gap-4 items-center font-medium text-xs uppercase cursor-pointer">
           <Link to="/">Home</Link>
-          <li>About</li>
-          <li>Categories</li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
         </ul>
 
         {/* Mobile Menu (Visible on small screens) */}
@@ -58,8 +66,9 @@ const Header = () => {
             <li>
               <Link to="/">Home</Link>
             </li>
-            <li>About</li>
-            <li>Categories</li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
           </ul>
         </div>
 
@@ -69,7 +78,7 @@ const Header = () => {
         </div>
 
         {/* Right */}
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-5 items-center">
           <div className="relative">
             <IoSearchOutline
               className={`w-6 h-6 cursor-pointer transition-transform duration-300 ${
@@ -85,8 +94,13 @@ const Header = () => {
               {serchOpen && <Search />}
             </div>
           </div>
-
-          <CiHeart className="w-6 h-6 cursor-pointer" aria-label="Favorites" />
+          <Link to="/wishlist" className="relative">
+          <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex justify-center items-center">{wishList.length}</span>
+            <CiHeart
+              className="w-6 h-6 cursor-pointer"
+              aria-label="Favorites"
+            />
+          </Link>
 
           <div className="relative">
             <MdOutlineShoppingBag

@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../../../utils/context";
 
 const Product = ({ productsData }) => {
   const baseUrl = process.env.REACT_APP_DEV_URL;
+
+  const { wishList, handleWishList } = useAppContext();
 
   useEffect(() => {
     window.scrollTo({
@@ -12,6 +15,8 @@ const Product = ({ productsData }) => {
       behavior: "smooth",
     });
   }, []);
+
+console.log("wishList",wishList)
 
   return (
     <>
@@ -21,14 +26,24 @@ const Product = ({ productsData }) => {
           ? `${baseUrl}${img.data[0].attributes.url}`
           : "/path/to/placeholder.jpg"; // Fallback for missing images
 
+        const isInWishList = wishList.some((item) => item.id === product.id);
+
         return (
           <div
             key={product.id}
             className="relative block overflow-hidden rounded-lg shadow-sm my-6"
           >
-            <button className="absolute top-4 end-4 z-10 rounded-full bg-white p-2 text-gray-900 transition hover:text-gray-700 focus:outline-none">
-              <span className="sr-only">Add to Wishlist</span>
-              <FaHeart className="" />
+            {/* Wishlist Button */}
+            <button
+              onClick={() => handleWishList(product)}
+              className={`absolute top-4 end-4 z-10 rounded-full bg-white p-2 transition focus:outline-none ${
+                isInWishList ? "text-red-600" : "text-gray-900 hover:text-gray-700"
+              }`}
+            >
+              <span className="sr-only">
+                {isInWishList ? "Remove from Wishlist" : "Add to Wishlist"}
+              </span>
+              {isInWishList ? <FaHeart /> : <CiHeart />}
             </button>
 
             <Link

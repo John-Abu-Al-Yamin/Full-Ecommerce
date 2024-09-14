@@ -3,6 +3,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import { useAppContext } from "../../utils/context";
 import { IoBagHandleSharp, IoCloseSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cartItems, openCart, setOpenCart, handleRemoveFromCart } =
@@ -111,9 +112,9 @@ const Cart = () => {
             <p className="text-lg font-medium text-gray-700">Total:</p>
             <p className="text-gray-500">${total.toFixed(2)}</p>
           </div>
-          <button className="bg-black text-white py-2 px-10 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors">
+          <Link to="/payment" className="bg-black text-white py-2 px-10 rounded-lg text-lg font-semibold hover:bg-gray-800 transition-colors">
             Checkout
-          </button>
+          </Link>
         </div>
       </div>
     </>

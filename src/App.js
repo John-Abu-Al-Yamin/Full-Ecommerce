@@ -12,6 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./App.css";
 import Payment from "./components/Payment/Payment";
+import About from "./components/About/About";
+import Wishlist from "./components/Wishlist/Wishlist";
 
 const App = () => {
   useEffect(() => {
@@ -32,12 +34,9 @@ const App = () => {
         />
         <Route path="/single-product/:id" element={<SingleProduct />} />
         <Route path="payment" element={<Payment />} />
+        <Route path="about" element={<About />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
-          
-
-
-
-          
 
       <Newsletter />
       <Footer />

@@ -1,0 +1,28 @@
+@keyframes confetti {
+    0% { transform: translateY(-100%); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+  
+  .celebration-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 50;
+  }
+  
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f39c12;
+    animation: confetti 1.3s linear infinite;
+  }
+  
+  /* Add more confetti with different colors and positions */
+  .confetti:nth-child(2) { background-color: #e74c3c; animation-delay: 0.5s; }
+  .confetti:nth-child(3) { background-color: #2ecc71; animation-delay: 1s; }
+  

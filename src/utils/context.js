@@ -7,10 +7,12 @@ export const Context = createContext();
 
 const AppContext = ({ children }) => {
   const [openCart, setOpenCart] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [serchOpen, setSerchOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+  const [wishList, setWishList] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [cartSubtotal, setCartSubtotal] = useState(0);
+  const [lastUpdatedWishListProduct, setLastUpdatedWishListProduct] = useState(null); // Track last updated product
 
   const { isLoading: categoriesLoading, data: categoriesData } = useQuery({
     queryKey: ["categories"],
@@ -67,9 +69,13 @@ const AppContext = ({ children }) => {
       let items = prevItems.map((item) => {
         if (item.id === productId) {
           if (item.quantity < newQuantity) {
-            toast.info(`Increased quantity of ${item.attributes.title} to ${newQuantity}.`);
+            toast.info(
+              `Increased quantity of ${item.attributes.title} to ${newQuantity}.`
+            );
           } else if (item.quantity > newQuantity) {
-            toast.info(`Decreased quantity of ${item.attributes.title} to ${newQuantity}.`);
+            toast.info(
+              `Decreased quantity of ${item.attributes.title} to ${newQuantity}.`
+            );
           }
           return { ...item, quantity: newQuantity };
         }
@@ -81,13 +87,60 @@ const AppContext = ({ children }) => {
     });
   };
 
+  // Handle WishList
+  const handleWishList = (product) => {
+    setWishList((prevItems) => {
+      let items = [...prevItems];
+      let index = items.findIndex((item) => item.id === product.id);
+
+      if (index !== -1) {
+        // If product is found in wishList, remove it
+        items.splice(index, 1);
+        setLastUpdatedWishListProduct({ product, action: 'removed' }); // Update last updated product state
+      } else {
+        // If product is not found in wishList, add it
+        items.push(product);
+        setLastUpdatedWishListProduct({ product, action: 'added' }); // Update last updated product state
+      }
+
+      return items;
+    });
+  };
+
+  // Function to remove an item from the wishlist
+  const removeItemFromWishList = (productId) => {
+    setWishList((prevItems) => {
+      let items = prevItems.filter((item) => item.id !== productId);
+      let removedItem = prevItems.find((item) => item.id === productId);
+
+      if (removedItem) {
+        toast.error(`${removedItem.attributes.title} removed from wish list.`);
+      }
+
+      return items;
+    });
+  };
+
+  // useEffect to trigger the toast after the wishlist has been updated
+  useEffect(() => {
+    if (lastUpdatedWishListProduct) {
+      const { product, action } = lastUpdatedWishListProduct;
+
+      if (action === 'added') {
+        toast.success(`${product.attributes.title} added to wish list!`);
+      } else if (action === 'removed') {
+        toast.error(`${product.attributes.title} removed from wish list.`);
+      }
+    }
+  }, [lastUpdatedWishListProduct]);
+
   return (
     <Context.Provider
       value={{
         openCart,
         setOpenCart,
-        searchOpen,
-        setSearchOpen,
+        serchOpen,
+        setSerchOpen,
         cartItems,
         setCartItems,
         cartCount,
@@ -100,7 +153,11 @@ const AppContext = ({ children }) => {
         productsData,
         handleRemoveFromCart,
         handleAddToCart,
-        handleQuantityCart
+        handleQuantityCart,
+        wishList,
+        setWishList,
+        handleWishList,
+        removeItemFromWishList, // Add this function to the context
       }}
     >
       {children}

@@ -105,7 +105,7 @@ const SingleProduct = () => {
                   Remove from Cart
                 </button>
               )}
-              <Link to="/checkout" className="px-8 py-2 bg-teal-400 text-black rounded-lg shadow-xl hover:bg-teal-500 transition-all">
+              <Link to="/payment" className="px-8 py-2 bg-teal-400 text-black rounded-lg shadow-xl hover:bg-teal-500 transition-all">
                 Check Out
               </Link>
             </div>
